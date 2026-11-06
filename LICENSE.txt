@@ -1,0 +1,75 @@
+MIT License
+
+Copyright (c) 2026 Vasile Pomian — Titan HFT (SHARK V7 RELOADED)
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+--------------------------------------------------------------------------------
+FINANCIAL RISK DISCLAIMER — NO LIABILITY
+--------------------------------------------------------------------------------
+TRADING FINANCIAL INSTRUMENTS INVOLVES SUBSTANTIAL RISK OF LOSS. NOTHING IN THE
+SOFTWARE OR ITS DOCUMENTATION CONSTITUTES FINANCIAL ADVICE, AND PAST OR
+SIMULATED PERFORMANCE IS NOT INDICATIVE OF FUTURE RESULTS. USE PAPER TRADING
+FIRST. YOU ARE SOLELY RESPONSIBLE FOR ANY ORDERS PLACED WITH YOUR API KEYS.
+
+THE AUTHOR ASSUMES NO RESPONSIBILITY OR LIABILITY WHATSOEVER FOR ANY FINANCIAL
+LOSS, LOST PROFITS, DATA LOSS, ACCOUNT ISSUES, BUGS, ERRONEOUS ORDERS, BROKER OR
+API FAILURES, OR ANY OTHER DIRECT OR INDIRECT DAMAGE RESULTING FROM THE USE OR
+INABILITY TO USE THE SOFTWARE. BY USING THE SOFTWARE YOU ACCEPT FULL AND SOLE
+RESPONSIBILITY FOR ALL CONSEQUENCES.
+
+--------------------------------------------------------------------------------
+NO SUPPORT
+--------------------------------------------------------------------------------
+THE SOFTWARE IS PROVIDED WITHOUT ANY SUPPORT, ASSISTANCE, MAINTENANCE, UPDATES,
+INSTALLATION HELP, CONFIGURATION HELP OR TRAINING. THE INCLUDED DOCUMENTATION
+IS THE ONLY RESOURCE PROVIDED. REQUESTS FOR HELP MAY BE IGNORED.
+
+NO API KEYS ARE INCLUDED. USERS MUST OBTAIN AND MANAGE THEIR OWN BROKER
+CREDENTIALS.
+
+--------------------------------------------------------------------------------
+DONATIONS
+--------------------------------------------------------------------------------
+Titan HFT is free. Donations are voluntary gifts: they are not a purchase, are
+non-refundable, and create no right to support, assistance, warranty, updates
+or any other obligation on the part of the author. Thank you to every good
+samaritan who chooses to support the project.
+
+--------------------------------------------------------------------------------
+THIRD-PARTY COMPONENTS (bundled, not covered by the above)
+--------------------------------------------------------------------------------
+* TradingView Lightweight Charts v4.0.1  (src/lightweight-charts.js)
+  Copyright (c) 2023 TradingView, Inc.
+  Licensed under the Apache License, Version 2.0
+  https://www.apache.org/licenses/LICENSE-2.0
+
+* Share Tech Mono font  (src/fonts/ShareTechMono-Regular.woff2)
+  Copyright (c) 2012 Carrois Type Design
+  Licensed under the SIL Open Font License, Version 1.1
+  https://openfontlicense.org
+
+Full license texts: see LICENSES/ and THIRD_PARTY_NOTICES.md.
+
+Alpaca is a trademark of AlpacaDB, Inc.; TradingView and Lightweight Charts are
+trademarks of TradingView, Inc. Titan HFT is an independent project and is not
+affiliated with, endorsed by or sponsored by these companies.
+
+Rust crate dependencies are fetched at build time from crates.io under their
+respective licenses (see src-tauri/Cargo.lock and src-tauri/deny.toml).
