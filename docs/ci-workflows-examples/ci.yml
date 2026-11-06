@@ -1,0 +1,157 @@
+name: CI
+
+on:
+  push:
+    branches: [master, main]
+  pull_request:
+    branches: [master, main]
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  frontend:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: JS syntax validation (node --check)
+        run: |
+          count=0
+          fail=0
+          while IFS= read -r -d '' f; do
+            case "$f" in */lightweight-charts.js) continue;; esac
+            if node --check "$f"; then
+              count=$((count + 1))
+            else
+              fail=$((fail + 1))
+            fi
+          done < <(find src/ -type f -name '*.js' -print0)
+          echo "Checked $count JS files, $fail failures"
+          [ "$fail" -eq 0 ] || exit 1
+
+      - name: DOM regression guard
+        run: bash guard_no_direct_getelementbyid.sh
+
+      - name: Static UI smoke (lightweight)
+        run: |
+          python3 - <<'PY'
+          import os, sys, re
+          from pathlib import Path
+
+          root = Path(".")
+          html_path = root / "src" / "index.html"
+          if not html_path.is_file():
+              print("FAIL: src/index.html not found", file=sys.stderr)
+              sys.exit(1)
+
+          html = html_path.read_text(encoding="utf-8", errors="replace")
+          errors = []
+
+          # 1. Verify all <script src="..."> references exist on disk
+          for m in re.finditer(r'<script\s+[^>]*src="([^"]+)"', html):
+              src = m.group(1)
+              if src.startswith("http://") or src.startswith("https://"):
+                  continue
+              script_path = root / "src" / src
+              if not script_path.is_file():
+                  errors.append(f"Missing script: {src} (resolved: {script_path})")
+
+          # 2. No alert() calls in HTML (should use TitanToast)
+          for i, line in enumerate(html.splitlines(), 1):
+              stripped = line.strip()
+              if stripped.startswith("//") or stripped.startswith("*"):
+                  continue
+              if re.search(r'\balert\s*\(', line):
+                  if 'catalyst' not in line.lower() and 'test' not in line.lower():
+                      errors.append(f"index.html:{i}: bare alert() call found")
+
+          # 3. Basic structure checks
+          if "<html" not in html:
+              errors.append("Missing <html> tag")
+          if "</html>" not in html:
+              errors.append("Missing </html> tag")
+          if "<head" not in html:
+              errors.append("Missing <head> tag")
+          if "<body" not in html:
+              errors.append("Missing <body> tag")
+
+          # 4. Verify CSS file exists
+          for m in re.finditer(r'<link\s+[^>]*href="([^"]+\.css)"', html):
+              href = m.group(1)
+              if href.startswith("http"):
+                  continue
+              css_path = root / "src" / href
+              if not css_path.is_file():
+                  errors.append(f"Missing CSS: {href} (resolved: {css_path})")
+
+          if errors:
+              print("Static UI smoke FAILED:", file=sys.stderr)
+              for e in errors:
+                  print(f"  - {e}", file=sys.stderr)
+              sys.exit(1)
+
+          print(f"Static UI smoke OK (checked {html_path})")
+          PY
+
+  backend:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-22.04, ubuntu-24.04]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          components: clippy, rustfmt
+
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: src-tauri
+          shared-key: titan-ci
+
+      - name: Install system deps
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libgtk-3-dev libwebkit2gtk-4.0-dev \
+            libayatana-appindicator3-dev librsvg2-dev
+
+      - name: Check format
+        run: cargo fmt --check
+        working-directory: src-tauri
+
+      - name: Clippy
+        run: cargo clippy --all-targets --features custom-protocol -- -D warnings
+        working-directory: src-tauri
+
+      - name: Build
+        run: cargo build --release --features custom-protocol
+        working-directory: src-tauri
+
+      - name: Test (workspace)
+        run: cargo test --workspace
+        working-directory: src-tauri
+
+      - name: Install cargo-deny
+        run: cargo install cargo-deny --locked
+
+      - name: License & advisory audit
+        run: cargo deny check
+        working-directory: src-tauri
+
+      - name: Install cargo-audit
+        run: cargo install cargo-audit --locked
+
+      - name: Security vulnerability scan
+        run: cargo audit
+        working-directory: src-tauri

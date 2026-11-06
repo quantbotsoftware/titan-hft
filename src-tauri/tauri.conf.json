@@ -1,0 +1,48 @@
+{
+    "build": {
+        "beforeDevCommand": "",
+        "beforeBuildCommand": "",
+        "devPath": "../src",
+        "distDir": "../dist",
+        "withGlobalTauri": true
+    },
+    "package": {
+        "productName": "titan-hft-v7-reloaded",
+        "version": "0.2.1"
+    },
+    "tauri": {
+        "allowlist": {
+            "all": false,
+            "window": {
+                "all": true
+            },
+            "shell": {
+                "all": false,
+                "open": true
+            }
+        },
+        "bundle": {
+            "active": true,
+            "targets": "all",
+            "identifier": "com.titan.hft.v7reloaded",
+            "icon": [
+                "icons/32x32.png",
+                "icons/128x128.png",
+                "icons/icon.png"
+            ]
+        },
+        "security": {
+            "csp": "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; connect-src 'self' https://paper-api.alpaca.markets https://api.alpaca.markets https://data.alpaca.markets https://api.telegram.org wss://stream.data.alpaca.markets wss://paper-api.alpaca.markets wss://api.alpaca.markets ws://127.0.0.1:7777; img-src 'self' data: blob:; font-src 'self' data:;"
+        },
+        "windows": [
+            {
+                "fullscreen": false,
+                "resizable": true,
+                "maximized": true,
+                "title": "Titan HFT (SHARK V7 RELOADED)",
+                "width": 1600,
+                "height": 1200
+            }
+        ]
+    }
+}
