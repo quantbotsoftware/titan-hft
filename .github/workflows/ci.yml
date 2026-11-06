@@ -57,7 +57,9 @@ jobs:
     timeout-minutes: 90
     steps:
       - uses: actions/checkout@v4
-      - uses: dtolnay/rust-toolchain@stable
+      # Pinned: wry 0.24 / webkit2gtk 0.18 (Tauri v1) do not compile on rustc >= 1.99; 1.93.0 is the verified toolchain
+      # (also enforced for local builds by rust-toolchain.toml in the repo root).
+      - uses: dtolnay/rust-toolchain@1.93.0
       - uses: Swatinem/rust-cache@v2
         with:
           workspaces: src-tauri

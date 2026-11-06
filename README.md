@@ -203,7 +203,7 @@ Seven full English + Romanian manuals are already bundled in this repository. If
 
 ## ✅ Continuous Integration
 
-Every push to `main` runs **`cargo test --workspace --locked` (549 unit + integration tests across the engine, risk guards, journal, oracle and workspace crates)** on Ubuntu 22.04 with the Tauri v1 toolchain, plus `node --check` on all 34 frontend scripts and a static smoke test of `index.html`. Tests are hermetic: `cfg(test)` redirects all data/journal paths to a temporary directory.
+Every push to `main` runs **`cargo test --workspace --locked` (549 unit + integration tests across the engine, risk guards, journal, oracle and workspace crates)** on Ubuntu 22.04 with the Tauri v1 toolchain (Rust pinned to 1.93.0 — see `rust-toolchain.toml`), plus `node --check` on all 34 frontend scripts and a static smoke test of `index.html`. Tests are hermetic: `cfg(test)` redirects all data/journal paths to a temporary directory.
 
 Workflow: [`.github/workflows/ci.yml`](.github/workflows/ci.yml) · runs: [https://github.com/quantbotsoftware/titan-hft/actions](https://github.com/quantbotsoftware/titan-hft/actions). No secrets, no broker or network calls, no telemetry — fork it and the same checks run for you.
 
