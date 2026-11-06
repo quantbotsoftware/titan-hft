@@ -8,6 +8,15 @@ pub fn base_dir() -> &'static PathBuf {
         if let Ok(val) = std::env::var("TITAN_DATA_DIR") {
             return PathBuf::from(val);
         }
+        // Unit tests must never touch a real journal/data dir (the test binary lives in
+        // target/*/deps, which would otherwise resolve to the home fallback below).
+        #[cfg(test)]
+        {
+            let d = std::env::temp_dir().join(format!("titan-hft-test-{}", std::process::id()));
+            let _ = std::fs::create_dir_all(&d);
+            return d;
+        }
+        #[allow(unreachable_code)]
         std::env::current_exe()
             .ok()
             .and_then(|exe| {

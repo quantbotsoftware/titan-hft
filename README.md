@@ -1,5 +1,7 @@
 # Titan HFT (SHARK V7 RELOADED)
 
+[![CI](https://github.com/quantbotsoftware/titan-hft/actions/workflows/ci.yml/badge.svg)](https://github.com/quantbotsoftware/titan-hft/actions/workflows/ci.yml) [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.23992530.svg)](https://doi.org/10.5281/zenodo.23992530) [![Hub](https://img.shields.io/badge/hub-bot--tradingsoftware.com-0a7)](https://bot-tradingsoftware.com/)
+
 ![License: MIT](https://img.shields.io/badge/license-MIT-10b981) ![Price: Free](https://img.shields.io/badge/price-free-3b82f6) [![Donations: Good Samaritans](https://img.shields.io/badge/donations-good%20samaritans-ec4899)](https://ko-fi.com/quantbotsoftware)
 
 **Free & open-source** algorithmic trading desktop application built with Tauri 1.x (Rust backend + high-performance vanilla JS frontend), WGPU compute shaders and a 7-layer signal Oracle.
@@ -197,3 +199,20 @@ Full legal terms, risk disclaimer and privacy policy: https://bot-tradingsoftwar
 ## 📄 Additional Documentation on Request
 
 Seven full English + Romanian manuals are already bundled in this repository. If you are studying a specific subsystem and need additional existing archival documentation, you may open a `[Docs Request]` ticket (if available, shared strictly AS-IS, with zero technical support).
+
+
+## ✅ Continuous Integration
+
+Every push to `main` runs **`cargo test --workspace --locked` (549 unit + integration tests across the engine, risk guards, journal, oracle and workspace crates)** on Ubuntu 22.04 with the Tauri v1 toolchain, plus `node --check` on all 34 frontend scripts and a static smoke test of `index.html`. Tests are hermetic: `cfg(test)` redirects all data/journal paths to a temporary directory.
+
+Workflow: [`.github/workflows/ci.yml`](.github/workflows/ci.yml) · runs: [https://github.com/quantbotsoftware/titan-hft/actions](https://github.com/quantbotsoftware/titan-hft/actions). No secrets, no broker or network calls, no telemetry — fork it and the same checks run for you.
+
+
+## 📊 Paper-Trading Track Record (real numbers, losses included)
+
+Titan has **no meaningful autonomous paper-trading record yet** (it has mostly been used as an execution / visualisation / GPU-simulation engine). We say so plainly instead of showing a cherry-picked backtest.
+
+- 🇬🇧 [TITAN_PAPER_TRACK_RECORD.md](TITAN_PAPER_TRACK_RECORD.md) · 🇷🇴 [TITAN_PAPER_TRACK_RECORD_RO.md](TITAN_PAPER_TRACK_RECORD_RO.md)
+- Online: [https://bot-tradingsoftware.com/#track-record](https://bot-tradingsoftware.com/#track-record)
+
+> Paper trading ≠ live trading. Simulated fills are optimistic. Nothing here is financial advice or a performance claim.

@@ -1,0 +1,77 @@
+name: CI
+
+# Runs on every push / PR to main. No secrets, no network calls to brokers, no telemetry.
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  CARGO_TERM_COLOR: always
+  CARGO_INCREMENTAL: "0"
+
+jobs:
+  frontend:
+    name: Frontend syntax & static smoke
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: JS syntax validation (node --check)
+        run: |
+          count=0; fail=0
+          while IFS= read -r -d '' f; do
+            case "$f" in */lightweight-charts.js) continue;; esac
+            if node --check "$f"; then count=$((count+1)); else echo "::error file=$f::syntax error"; fail=$((fail+1)); fi
+          done < <(find src -type f -name '*.js' -print0)
+          echo "Checked $count JS files, $fail failures"
+          [ "$fail" -eq 0 ]
+      - name: Static UI smoke (index.html references resolve)
+        run: |
+          python3 - <<'PY'
+          import re, sys
+          from pathlib import Path
+          html = Path("src/index.html").read_text(encoding="utf-8", errors="replace")
+          missing = [m.group(1) for m in re.finditer(r'<(?:script|link)\s+[^>]*(?:src|href)="([^"]+)"', html)
+                     if not m.group(1).startswith(("http://", "https://", "data:")) and not (Path("src") / m.group(1).split("?")[0]).is_file()]
+          if missing:
+              print("Missing local assets referenced by index.html:", *missing, sep="\n  "); sys.exit(1)
+          print("Static UI smoke OK")
+          PY
+
+  rust:
+    name: Rust build & tests (Tauri v1, Ubuntu 22.04)
+    runs-on: ubuntu-22.04
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: src-tauri
+      - name: Install Tauri v1 system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            libgtk-3-dev libwebkit2gtk-4.0-dev libayatana-appindicator3-dev librsvg2-dev \
+            libssl-dev pkg-config patchelf
+      - name: Stage frontend bundle (tauri distDir = ../dist)
+        run: mkdir -p dist && cp -a src/. dist/
+      - name: cargo test --workspace --locked
+        working-directory: src-tauri
+        env:
+          # Tests are isolated anyway (cfg(test) uses a temp dir) — belt and braces.
+          TITAN_DATA_DIR: ${{ runner.temp }}/titan-data
+        run: cargo test --workspace --locked
