@@ -1,0 +1,3 @@
+date,time,symbol,timeframe,source,setup_side,entry_signal,entry_price,stop_price,tp_price,position_size,risk_pct,r_multiple_pl,pnl_usd,exit_signal,hold_minutes,market_regime,entry_score,mtf_alignment,mistake_tag,execution_quality,emotion_state,notes,screenshot_path
+2026-03-27,09:35,QBTS,5m,GPU,LONG,G BUY,14.82,14.74,14.98,500,0.35,1.6,280.00,G TRAIL,18,Trending,78,Good,None,Good,Calm,"Clean entry, partial on trail","screenshots/2026-03-27_qbts_5m_trade1.png"
+2026-03-27,10:12,TSLA,3m,FUSION,SHORT,F SELL,172.40,173.05,171.20,120,0.30,-1.0,-150.00,F CHAOS,7,Chaotic,65,Mixed,EarlyEntry,Average,Impatient,"Entered before close candle","screenshots/2026-03-27_tsla_3m_trade2.png"

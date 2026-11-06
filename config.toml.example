@@ -1,0 +1,16 @@
+# Titan HFT — optional bootstrap credentials file.
+#
+# Copy this file to `config.toml` in the application's data directory
+# (the directory where the app writes `data/`, `logs/` and `reports/`):
+#   - running from a source build:  <PROJECT_ROOT>/src-tauri/config.toml
+#   - custom location:              set the TITAN_DATA_DIR environment variable
+#
+# Credentials entered in the in-app Settings panel take precedence and are
+# stored in `data/titan_keys.json`; this file is only read when that file is
+# absent. All strategy / risk parameters are configured inside the application.
+
+[alpaca]
+key_id = "YOUR_ALPACA_KEY_ID"
+secret = "YOUR_ALPACA_SECRET"
+# Paper trading endpoint (default). For live trading use https://api.alpaca.markets
+base_url = "https://paper-api.alpaca.markets"

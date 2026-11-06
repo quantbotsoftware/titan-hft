@@ -1,0 +1,16 @@
+pub(crate) mod ai_scan_loop;
+pub(crate) mod autopilot;
+pub(crate) mod autosave_loop;
+pub(crate) mod journal_flush_loop;
+pub(crate) mod daily_reset;
+pub(crate) mod equity_sync;
+pub(crate) mod genetic_loop;
+pub(crate) mod news_loop;
+pub(crate) mod nexus_loop;
+pub(crate) mod position_recon;
+pub(crate) mod smarttrend_bot;
+pub(crate) mod smarttrend_sentinel;
+pub(crate) mod snapshot_loop;
+pub(crate) mod trade_updates;
+pub(crate) mod volatility;
+pub(crate) mod watchdog_loop;

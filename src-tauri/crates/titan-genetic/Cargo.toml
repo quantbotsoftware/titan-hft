@@ -1,0 +1,14 @@
+[package]
+name = "titan-genetic"
+version = "0.1.0"
+edition = "2021"
+publish = false
+
+[dependencies]
+titan-types = { path = "../titan-types" }
+arc-swap = "1"
+rand = "0.8"
+rust_decimal = { version = "1", features = ["serde-with-str", "serde-with-float"] }
+rust_decimal_macros = "1"
+serde = { version = "1.0", features = ["derive"] }
+rayon = "1"
