@@ -1,0 +1,93 @@
+[workspace]
+members = [
+    ".",
+    "crates/titan-types",
+    "crates/titan-risk",
+    "crates/titan-genetic",
+    "crates/titan-indicators",
+]
+
+[package]
+name = "titan_hft_rust"
+version = "0.2.1"
+description = "Titan HFT Bot Rust Backend"
+authors = ["Titan HFT"]
+edition = "2021"
+publish = false
+
+[build-dependencies]
+tauri-build = { version = "1", features = [] }
+
+[dependencies]
+titan-types = { path = "crates/titan-types" }
+titan-risk = { path = "crates/titan-risk" }
+titan-genetic = { path = "crates/titan-genetic" }
+titan-indicators = { path = "crates/titan-indicators" }
+tauri = { version = "1", features = [ "shell-open", "window-all", "custom-protocol"] }
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+ordered-float = "4"
+# ASYNC RUNTIME - OPTIMIZED
+tokio = { version = "1", features = ["full", "rt-multi-thread"] }
+# FAST HTTP & WS
+reqwest = { version = "0.11", features = ["json"] }
+tokio-tungstenite = { version = "0.20", features = ["native-tls"] }
+url = "2.4"
+# HIGH PERFORMANCE MATH & BUFFERS
+ndarray = "0.15"
+# UTILS
+toml = "0.8"
+sysinfo = "0.33"
+dotenv = "0.15"
+chrono = { version = "0.4", features = ["serde"] }
+chrono-tz = "0.8"
+futures-util = "0.3"
+futures = "0.3"
+lazy_static = "1"
+rand = "0.8"
+regex = "1"
+redis = "0.27.3"
+rayon = "1"
+wgpu = "0.19"
+bytemuck = { version = "1", features = ["derive"] }
+futures-intrusive = "0.5"
+# TITAN UPGRADE — Safety & Performance
+rust_decimal = { version = "1", features = ["serde-with-str", "serde-with-float"] }
+rust_decimal_macros = "1"
+arc-swap = "1"
+# STRUCTURED LOGGING
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter", "json", "fmt", "time"] }
+tracing-appender = "0.2"
+tokio-util = { version = "0.7", features = ["rt"] }
+# Web Dashboard
+axum = { version = "0.7", features = ["ws"] }
+tower-http = { version = "0.5", features = ["cors"] }
+thiserror = "2.0.18"
+sha2 = "0.10"
+hex = "0.4"
+uuid = { version = "1.23.0", features = ["v4"] }
+
+[features]
+default = ["gpu", "telegram", "web-dashboard", "options"]
+custom-protocol = ["tauri/custom-protocol"]
+gpu = []
+telegram = []
+web-dashboard = []
+options = []
+
+[profile.release]
+lto = true
+codegen-units = 1
+panic = "abort"
+strip = true
+opt-level = 3
+
+[dev-dependencies]
+mockito = "1.7.2"
+proptest = "1.11.0"
+criterion = { version = "0.5", features = ["html_reports"] }
+
+[[bench]]
+name = "bench_check_entry"
+harness = false

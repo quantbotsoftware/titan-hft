@@ -1,0 +1,94 @@
+name: Release
+
+on:
+  push:
+    tags: ['v*']
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  build-release:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          components: clippy, rustfmt
+
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: src-tauri
+          shared-key: titan-release
+
+      - name: Install system deps
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libgtk-3-dev libwebkit2gtk-4.0-dev \
+            libayatana-appindicator3-dev librsvg2-dev
+
+      - name: Check format
+        run: cargo fmt --check
+        working-directory: src-tauri
+
+      - name: Clippy
+        run: cargo clippy --all-targets --features custom-protocol -- -D warnings
+        working-directory: src-tauri
+
+      - name: Build release
+        run: cargo build --release --features custom-protocol
+        env:
+          TITAN_GIT_HASH: ${{ github.sha }}
+          TITAN_BUILD_DATE: ${{ github.event.head_commit.timestamp }}
+        working-directory: src-tauri
+
+      - name: Test (workspace)
+        run: cargo test --workspace
+        working-directory: src-tauri
+
+      - name: Install cargo-deny
+        run: cargo install cargo-deny --locked
+
+      - name: License & advisory audit
+        run: cargo deny check
+        working-directory: src-tauri
+
+      - name: Install cargo-audit
+        run: cargo install cargo-audit --locked
+
+      - name: Security vulnerability scan
+        run: cargo audit
+        working-directory: src-tauri
+
+      - name: Strip binary
+        run: strip src-tauri/target/release/titan_hft_rust
+
+      - name: Generate checksums
+        run: |
+          cd src-tauri/target/release
+          sha256sum titan_hft_rust > titan_hft_rust.sha256
+          echo "SHA256: $(cat titan_hft_rust.sha256)"
+
+      - name: Create release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            src-tauri/target/release/titan_hft_rust
+            src-tauri/target/release/titan_hft_rust.sha256
+          generate_release_notes: true
+          body: |
+            ## Build Info
+            - **Commit:** ${{ github.sha }}
+            - **Toolchain:** stable
+            - **Runner:** ubuntu-22.04
+            - **Binary:** stripped, checksummed (SHA-256)

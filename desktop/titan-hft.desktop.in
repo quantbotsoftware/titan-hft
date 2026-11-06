@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=Titan HFT (Open Source)
+Comment=GPU-Accelerated Algorithmic Trading Engine (Rust + Tauri + WGPU, AS-IS)
+Exec=@REPO_DIR@/src-tauri/target/release/titan_hft_rust
+Path=@REPO_DIR@
+Terminal=false
+Categories=Office;Finance;

@@ -1,0 +1,76 @@
+# ── Build artifacts & compiled binaries ──────────────
+/target
+/src-tauri/target
+/src-tauri/titan_hft_rust
+/dist
+
+# ── Secrets & API keys ──────────────────────────────
+config.toml
+titan_keys.json
+*.secret
+.env
+.env.*
+
+# ── Application state (runtime-generated) ───────────
+titan_wallet.json
+titan_settings.json
+titan_state_snapshot.json
+titan_position_blacklist.json
+/data/
+/journal/
+SESSION_CONTEXT.md
+
+# ── Logs ────────────────────────────────────────────
+/logs
+*.log
+
+# ── Generated / large files ─────────────────────────
+repomix-output.xml
+full_code_audit.txt
+
+# ── One-off scripts & prototypes ────────────────────
+fix_colors.py
+prototype_manual_trade.html
+*.bak
+
+# ── Personal notes (not part of the project) ────────
+adresa de web ptr xiaomi
+comanda pentru iconita shark
+comanda ptr build.sh
+comanda text file creare ptr xiaomi
+gaussian channel
+utilization  guide for gaussian channel
+Ghid Construire AI Coding Station.md
+Warrior Trading - Stock Selection.pdf
+prompt ptr front end.
+
+# ── IDE & OS ────────────────────────────────────────
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# ── Node / npm (package-lock with no package.json) ──
+node_modules/
+package-lock.json
+
+# ── Backtest & report output ─────────────────────────
+/backtests/
+/reports/
+
+# ── Credential / key files ───────────────────────────
+*.pem
+*.p12
+*.key
+
+# ── Backups & private sale material (never publish) ─
+*.bak
+*.bak.*
+config.toml.bak*
+*.zip
+/public_release/
+/flippapictures/
+/flippa_marketing_materials/
